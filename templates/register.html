@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+.reg-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 100px 1.5rem 3rem;
+}
+
+.reg-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.reg-steps {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 6px;
+}
+
+.step-item {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  cursor: default;
+  transition: var(--transition);
+}
+
+.step-item.active {
+  background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(124,58,237,0.1));
+  border: 1px solid rgba(0,212,255,0.25);
+}
+
+.step-num {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.step-item.active .step-num { color: var(--accent-blue); }
+
+.step-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.step-item.active .step-label { color: var(--text-primary); }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-grid .full { grid-column: 1 / -1; }
+
+.reg-card {
+  padding: 2.5rem;
+  border-radius: var(--radius-xl);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+}
+
+/* Camera section */
+.camera-section {
+  display: none;
+  text-align: center;
+}
+
+.camera-section.active { display: block; }
+
+.video-wrap {
+  position: relative;
+  display: inline-block;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 2px solid rgba(0,212,255,0.3);
+  box-shadow: 0 0 30px rgba(0,212,255,0.1);
+  margin-bottom: 1.5rem;
+}
+
+#reg-video {
+  width: 400px;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.video-overlay-scan {
+  position: absolute;
+  left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  animation: scanline 2s linear infinite;
+}
+
+.capture-status {
+  font-size: 0.9rem;
+  padding: 10px 20px;
+  border-radius: 20px;
+  margin: 1rem auto;
+  display: inline-block;
+}
+
+.progress-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 10px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.3s;
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/user_login">Login</a></li>
+  </ul>
+</nav>
+
+<div class="reg-container">
+  <div class="reg-header">
+    <div class="section-title" style="text-align:center;">Voter Registration</div>
+    <h1 class="section-heading" style="text-align:center;font-size:1.8rem;">Create Your Voter Account</h1>
+  </div>
+
+  <div class="reg-steps">
+    <div class="step-item active" id="step-tab-1">
+      <div class="step-num">STEP 01</div>
+      <div class="step-label">📋 Personal Info</div>
+    </div>
+    <div class="step-item" id="step-tab-2">
+      <div class="step-num">STEP 02</div>
+      <div class="step-label">📸 Face Capture</div>
+    </div>
+    <div class="step-item" id="step-tab-3">
+      <div class="step-num">STEP 03</div>
+      <div class="step-label">✅ Complete</div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Form -->
+  <div id="step-1" class="reg-card">
+    <div id="form-alert"></div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label class="form-label">Full Name *</label>
+        <div class="form-input-icon">
+          <span class="icon"><i class="fa fa-user"></i></span>
+          <input type="text" id="full_name" class="form-input" placeholder="As per Aadhaar card" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Aadhaar Number *</label>
+        <div class="form-input-icon">
+          <span class="icon"><i class="fa fa-id-badge"></i></span>
+          <input type="text" id="aadhaar" class="form-input" placeholder="12-digit Aadhaar"
+                 maxlength="12" pattern="[0-9]{12}" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">EPIC / Voter ID *</label>
+        <div class="form-input-icon">
+          <span class="icon"><i class="fa fa-id-card"></i></span>
+          <input type="text" id="epic_id" class="form-input" placeholder="e.g. ABC1234567"
+                 maxlength="10" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mobile Number *</label>
+        <div class="form-input-icon">
+          <span class="icon"><i class="fa fa-mobile"></i></span>
+          <input type="text" id="mobile" class="form-input" placeholder="10-digit mobile"
+                 maxlength="10" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email ID (Optional)</label>
+        <div class="form-input-icon">
+          <span class="icon"><i class="fa fa-envelope"></i></span>
+          <input type="email" id="email" class="form-input" placeholder="your@email.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date of Birth *</label>
+        <input type="date" id="dob" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender *</label>
+        <select id="gender" class="form-input" required>
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other / Prefer not to say</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">State *</label>
+        <select id="state" class="form-input" required>
+          <option value="">Select State</option>
+          <option>Andhra Pradesh</option><option>Arunachal Pradesh</option>
+          <option>Assam</option><option>Bihar</option><option>Chhattisgarh</option>
+          <option>Goa</option><option>Gujarat</option><option>Haryana</option>
+          <option>Himachal Pradesh</option><option>Jharkhand</option>
+          <option>Karnataka</option><option>Kerala</option>
+          <option>Madhya Pradesh</option><option>Maharashtra</option>
+          <option>Manipur</option><option>Meghalaya</option><option>Mizoram</option>
+          <option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+          <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option>
+          <option>Telangana</option><option>Tripura</option>
+          <option>Uttar Pradesh</option><option>Uttarakhand</option>
+          <option>West Bengal</option><option>Delhi</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem;">
+      <button class="btn btn-primary btn-full btn-lg" onclick="validateStep1()">
+        <i class="fa fa-arrow-right"></i> Continue to Face Capture
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Camera -->
+  <div id="step-2" style="display:none;">
+    <div class="reg-card">
+      <h3 style="font-family:var(--font-display);font-size:1rem;margin-bottom:0.5rem;color:var(--accent-blue);">FACE CAPTURE</h3>
+      <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">
+        Look directly at the camera. Keep your face well-lit and centered. System will capture 100 face frames automatically.
+      </p>
+      <div id="cam-alert"></div>
+      <div style="text-align:center;">
+        <div class="video-wrap">
+          <video id="reg-video" autoplay playsinline></video>
+          <div class="video-overlay-scan"></div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div id="capture-status" class="capture-status alert alert-info">
+          Click "Start Capture" when ready
+        </div>
+        <div style="display:flex;gap:1rem;justify-content:center;margin-top:1rem;">
+          <button class="btn btn-secondary" onclick="goBack()">
+            <i class="fa fa-arrow-left"></i> Back
+          </button>
+          <button class="btn btn-primary btn-lg" id="capture-btn" onclick="startCapture()">
+            <i class="fa fa-camera"></i> Start Capture
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Success -->
+  <div id="step-3" style="display:none;">
+    <div class="reg-card" style="text-align:center;padding:3rem;">
+      <div style="font-size:5rem;margin-bottom:1.5rem;animation:float 2s ease-in-out infinite;">🎉</div>
+      <h2 style="font-family:var(--font-display);color:var(--accent-green);margin-bottom:1rem;">Registration Complete!</h2>
+      <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:1rem;line-height:1.7;">
+        Your voter profile has been successfully created with face recognition data.
+        You can now login on election day to cast your vote.
+      </p>
+      <a href="/user_login" class="btn btn-primary btn-lg">
+        <i class="fa fa-sign-in-alt"></i> Go to Login
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+let videoStream = null;
+let formData = {};
+
+function showAlert(id, msg, type='error') {
+  document.getElementById(id).innerHTML =
+    `<div class="alert alert-${type}"><i class="fa fa-${type==='error'?'exclamation-circle':'check-circle'}"></i> ${msg}</div>`;
+}
+
+function validateStep1() {
+  const fields = {
+    full_name: 'Full name', aadhaar: 'Aadhaar number',
+    epic_id: 'EPIC ID', mobile: 'Mobile number',
+    dob: 'Date of birth', gender: 'Gender', state: 'State'
+  };
+  for(const [id, label] of Object.entries(fields)) {
+    const val = document.getElementById(id).value.trim();
+    if(!val) { showAlert('form-alert', `${label} is required`); return; }
+  }
+  const aadhaar = document.getElementById('aadhaar').value.trim();
+  if(!/^[0-9]{12}$/.test(aadhaar)) {
+    showAlert('form-alert', 'Aadhaar must be exactly 12 digits'); return;
+  }
+  const mobile = document.getElementById('mobile').value.trim();
+  if(!/^[0-9]{10}$/.test(mobile)) {
+    showAlert('form-alert', 'Mobile must be exactly 10 digits'); return;
+  }
+
+  formData = {
+    full_name: document.getElementById('full_name').value.trim(),
+    aadhaar:   aadhaar,
+    epic_id:   document.getElementById('epic_id').value.trim().toUpperCase(),
+    mobile:    mobile,
+    email:     document.getElementById('email').value.trim(),
+    dob:       document.getElementById('dob').value,
+    gender:    document.getElementById('gender').value,
+    state:     document.getElementById('state').value
+  };
+
+  // Server-side validation
+  const fd = new FormData();
+  Object.entries(formData).forEach(([k,v]) => fd.append(k, v));
+
+  fetch('/register', { method:'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+      if(data.status === 'success') {
+        goToStep2();
+      } else {
+        showAlert('form-alert', data.message);
+      }
+    });
+}
+
+function goToStep2() {
+  document.getElementById('step-1').style.display = 'none';
+  document.getElementById('step-2').style.display = 'block';
+  document.getElementById('step-tab-1').classList.remove('active');
+  document.getElementById('step-tab-2').classList.add('active');
+  startCamera();
+}
+
+function startCamera() {
+  navigator.mediaDevices.getUserMedia({ video: { width:400, height:300 } })
+    .then(stream => {
+      videoStream = stream;
+      document.getElementById('reg-video').srcObject = stream;
+    })
+    .catch(e => showAlert('cam-alert', 'Camera access denied: ' + e.message));
+}
+
+function goBack() {
+  if(videoStream) videoStream.getTracks().forEach(t => t.stop());
+  document.getElementById('step-2').style.display = 'none';
+  document.getElementById('step-1').style.display = 'block';
+  document.getElementById('step-tab-2').classList.remove('active');
+  document.getElementById('step-tab-1').classList.add('active');
+}
+
+function startCapture() {
+  document.getElementById('capture-btn').disabled = true;
+  document.getElementById('capture-btn').innerHTML = '<i class="fa fa-spinner fa-spin"></i> Capturing...';
+  document.getElementById('capture-status').className = 'capture-status alert alert-info';
+  document.getElementById('capture-status').textContent = 'Capturing face frames...';
+
+  const video  = document.getElementById('reg-video');
+  const fill   = document.getElementById('progress-fill');
+  const status = document.getElementById('capture-status');
+
+  let frames    = 0;
+  const TOTAL   = 100;
+  const SEND_AT = 30;
+  let bestImage = null;
+  let sent      = false;
+
+  const interval = setInterval(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width  = video.videoWidth  || 400;
+    canvas.height = video.videoHeight || 300;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    const image = canvas.toDataURL('image/jpeg', 0.7);
+
+    if(frames === SEND_AT) bestImage = image;
+    frames++;
+
+    // Progress 0 to 100% smoothly
+    fill.style.width = Math.min((frames / TOTAL) * 100, 100) + '%';
+
+    // Status messages
+    if(frames < 30)      status.textContent = '📸 Scanning your face...';
+    else if(frames < 60) status.textContent = '🔍 Analyzing face features...';
+    else if(frames < 85) status.textContent = '💾 Processing face data...';
+    else                 status.textContent = '✅ Almost done...';
+
+    // Send to server at frame 60
+    if(frames === 60 && !sent) {
+      sent = true;
+      fetch('/save_face_register', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ image: bestImage })
+      })
+      .then(r => r.json())
+      .then(data => {
+        clearInterval(interval);
+        fill.style.width = '100%';
+        if(data.status === 'success') {
+          status.textContent = '🎉 Face captured successfully!';
+          status.className   = 'capture-status alert alert-success';
+          if(videoStream) videoStream.getTracks().forEach(t => t.stop());
+          setTimeout(() => {
+            document.getElementById('step-2').style.display = 'none';
+            document.getElementById('step-3').style.display = 'block';
+            document.getElementById('step-tab-2').classList.remove('active');
+            document.getElementById('step-tab-3').classList.add('active');
+          }, 800);
+        } else {
+          status.textContent = '❌ ' + data.message;
+          status.className   = 'capture-status alert alert-error';
+          fill.style.width   = '0%';
+          document.getElementById('capture-btn').disabled  = false;
+          document.getElementById('capture-btn').innerHTML = '<i class="fa fa-camera"></i> Retry Capture';
+        }
+      })
+      .catch(() => {
+        clearInterval(interval);
+        status.textContent = '⚠️ Server error. Please retry.';
+        status.className   = 'capture-status alert alert-error';
+        fill.style.width   = '0%';
+        document.getElementById('capture-btn').disabled  = false;
+        document.getElementById('capture-btn').innerHTML = '<i class="fa fa-camera"></i> Retry Capture';
+      });
+    }
+
+    if(frames >= TOTAL && !sent) clearInterval(interval);
+
+  }, 40);
+}
+</script>
+</body>
+</html>

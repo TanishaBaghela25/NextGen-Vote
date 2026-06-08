@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Add Admin — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+.admin-layout { display: flex; min-height: 100vh; padding-top: 70px; }
+.sidebar {
+  width: 240px; min-width: 240px;
+  background: rgba(4,10,26,0.95);
+  border-right: 1px solid var(--glass-border);
+  padding: 1.5rem 0;
+  position: fixed; top: 70px; bottom: 0; overflow-y: auto;
+}
+.sidebar-section {
+  padding: 0.5rem 1rem; font-size: 0.7rem; font-weight: 600;
+  color: var(--text-muted); letter-spacing: 2px;
+  text-transform: uppercase; margin-top: 1rem;
+}
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px; color: var(--text-secondary);
+  text-decoration: none; font-size: 0.9rem;
+  transition: var(--transition); border-left: 3px solid transparent;
+}
+.sidebar-link:hover, .sidebar-link.active {
+  color: var(--text-primary); background: rgba(0,212,255,0.05);
+  border-left-color: var(--accent-blue);
+}
+.sidebar-link i { width: 18px; text-align: center; }
+.admin-main { flex: 1; margin-left: 240px; padding: 2rem; display: flex; align-items: flex-start; justify-content: center; }
+.add-card {
+  width: 100%; max-width: 460px;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  margin-top: 1rem;
+}
+@media(max-width:768px) {
+  .sidebar { display: none; }
+  .admin-main { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/admin_dashboard">Dashboard</a></li>
+    <li><a href="/admin_logout">Logout</a></li>
+  </ul>
+</nav>
+
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">Main</div>
+    <a href="/admin_dashboard" class="sidebar-link"><i class="fa fa-chart-pie"></i> Dashboard</a>
+    <a href="/admin_voters" class="sidebar-link"><i class="fa fa-users"></i> Voters</a>
+    <a href="/admin_results" class="sidebar-link"><i class="fa fa-chart-bar"></i> Live Results</a>
+    <div class="sidebar-section">Admin</div>
+    <a href="/admin_change_password" class="sidebar-link"><i class="fa fa-key"></i> Change Password</a>
+    <a href="/admin_add" class="sidebar-link active"><i class="fa fa-user-plus"></i> Add Admin</a>
+    <a href="/admin_logout" class="sidebar-link"><i class="fa fa-sign-out-alt"></i> Logout</a>
+  </aside>
+
+  <main class="admin-main">
+    <div class="add-card">
+      <div style="margin-bottom:2rem;">
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:0.3rem;">
+          <i class="fa fa-user-plus" style="color:var(--accent-blue);margin-right:8px;"></i>Add New Admin
+        </div>
+        <div style="color:var(--text-muted);font-size:0.85rem;">
+          Create a new admin account. The new admin gets full dashboard access.
+        </div>
+      </div>
+
+      {% if error %}
+      <div class="alert alert-error"><i class="fa fa-exclamation-circle"></i> {{ error }}</div>
+      {% endif %}
+      {% if success %}
+      <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}</div>
+      {% endif %}
+
+      <form method="POST">
+        <div class="form-group">
+          <label class="form-label">New Admin Username *</label>
+          <div class="form-input-icon">
+            <span class="icon"><i class="fa fa-user-shield"></i></span>
+            <input type="text" name="username" class="form-input" placeholder="Unique username" required minlength="4" autocomplete="off">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <div class="form-input-icon" style="position:relative;">
+            <span class="icon"><i class="fa fa-lock"></i></span>
+            <input type="password" name="password" id="pw" class="form-input" placeholder="Minimum 8 characters" required minlength="8">
+            <span onclick="togglePw()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text-muted);">
+              <i id="eye-icon" class="fa fa-eye"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="alert alert-info" style="margin-bottom:1.5rem;">
+          <i class="fa fa-info-circle"></i>
+          Password is stored as SHA-256 hash. Share credentials securely.
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg">
+          <i class="fa fa-user-plus"></i> Create Admin Account
+        </button>
+      </form>
+
+      <div class="glow-line"></div>
+      <a href="/admin_dashboard" style="display:flex;align-items:center;gap:6px;color:var(--text-muted);text-decoration:none;font-size:0.85rem;justify-content:center;">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </main>
+</div>
+
+<script>
+function togglePw() {
+  const pw = document.getElementById('pw');
+  const ic = document.getElementById('eye-icon');
+  pw.type = pw.type === 'password' ? 'text' : 'password';
+  ic.className = pw.type === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash';
+}
+</script>
+</body>
+</html>

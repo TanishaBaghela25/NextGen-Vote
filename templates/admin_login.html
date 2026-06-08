@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Login — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+.admin-login-wrap {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+
+.admin-card {
+  width: 100%; max-width: 400px;
+  padding: 2.5rem;
+  border-radius: var(--radius-xl);
+  background: var(--bg-card);
+  border: 1px solid rgba(124,58,237,0.3);
+  box-shadow: 0 0 40px rgba(124,58,237,0.08);
+}
+
+.admin-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(0,212,255,0.1));
+  border: 2px solid rgba(124,58,237,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 1.5rem;
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">← Back to Home</a></li>
+  </ul>
+</nav>
+
+<div class="admin-login-wrap">
+  <div class="admin-card">
+    <div class="admin-icon">🔐</div>
+    <div style="text-align:center;margin-bottom:2rem;">
+      <h2 style="font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);margin-bottom:0.4rem;">ADMIN ACCESS</h2>
+      <p style="color:var(--text-muted);font-size:0.82rem;">Election Commission Portal</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error"><i class="fa fa-ban"></i> {{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <div class="form-input-icon">
+          <span class="icon"><i class="fa fa-user-shield"></i></span>
+          <input type="text" name="username" class="form-input" placeholder="Admin username" required autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="form-input-icon" style="position:relative;">
+          <span class="icon"><i class="fa fa-lock"></i></span>
+          <input type="password" name="password" id="pw" class="form-input" placeholder="••••••••" required>
+          <span onclick="togglePw()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text-muted);">
+            <i class="fa fa-eye" id="eye-icon"></i>
+          </span>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-full btn-lg" style="background:linear-gradient(135deg,#7c3aed,#4c1d95);color:white;margin-top:0.5rem;">
+        <i class="fa fa-sign-in-alt"></i> Login to Dashboard
+      </button>
+    </form>
+
+    <div class="glow-line"></div>
+    
+  </div>
+</div>
+
+<script>
+function togglePw() {
+  const pw = document.getElementById('pw');
+  const ic = document.getElementById('eye-icon');
+  if(pw.type === 'password') { pw.type = 'text'; ic.className = 'fa fa-eye-slash'; }
+  else { pw.type = 'password'; ic.className = 'fa fa-eye'; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>About — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+.about-page { padding: 100px 2rem 4rem; max-width: 900px; margin: 0 auto; }
+.about-hero {
+  text-align: center; margin-bottom: 4rem;
+}
+.tech-stack {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem; margin-top: 2rem;
+}
+.tech-card {
+  padding: 1.5rem; border-radius: var(--radius-md);
+  background: var(--bg-card); border: 1px solid var(--glass-border);
+  text-align: center; transition: var(--transition);
+}
+.tech-card:hover { transform: translateY(-3px); border-color: rgba(0,212,255,0.2); }
+.tech-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+.tech-name { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
+.tech-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+.faq-list { margin-top: 2rem; }
+.faq-item {
+  padding: 1.2rem 1.5rem;
+  background: var(--bg-card); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md); margin-bottom: 0.8rem;
+  cursor: pointer; transition: var(--transition);
+}
+.faq-item:hover { border-color: rgba(0,212,255,0.2); }
+.faq-q { font-weight: 600; color: var(--text-primary); display: flex; justify-content: space-between; align-items: center; }
+.faq-a { margin-top: 0.8rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; display: none; }
+.faq-item.open .faq-a { display: block; }
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-icon { transition: transform 0.3s; color: var(--accent-blue); }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/register">Register</a></li>
+    <li><a href="/user_login">Login</a></li>
+  </ul>
+</nav>
+
+<div class="about-page">
+  <div class="about-hero">
+    <div class="section-title" style="text-align:center;">About NEXTGEN VOTE</div>
+    <h1 class="section-heading" style="text-align:center;font-size:2rem;">
+      India's Smartest<br>Voting Platform
+    </h1>
+    <p style="color:var(--text-secondary);max-width:600px;margin:1rem auto 0;line-height:1.7;font-size:0.95rem;">
+      NEXTGEN VOTE is an AI-powered online voting system that combines biometric face recognition,
+      Aadhaar verification, and real-time analytics to ensure secure, transparent, and tamper-proof elections.
+    </p>
+  </div>
+
+  <!-- Mission -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:3rem;">
+    <div style="padding:2rem;background:var(--bg-card);border:1px solid var(--glass-border);border-radius:var(--radius-lg);">
+      <div style="font-size:2rem;margin-bottom:1rem;">🎯</div>
+      <h3 style="font-family:var(--font-display);font-size:0.9rem;margin-bottom:0.6rem;color:var(--accent-blue);">OUR MISSION</h3>
+      <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;">
+        To eliminate voter fraud, duplicate voting, and election manipulation through modern AI technology 
+        accessible to every eligible Indian citizen.
+      </p>
+    </div>
+    <div style="padding:2rem;background:var(--bg-card);border:1px solid var(--glass-border);border-radius:var(--radius-lg);">
+      <div style="font-size:2rem;margin-bottom:1rem;">🔬</div>
+      <h3 style="font-family:var(--font-display);font-size:0.9rem;margin-bottom:0.6rem;color:var(--accent-cyan);">OUR APPROACH</h3>
+      <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;">
+        Triple verification — Aadhaar + OTP + Face Recognition — ensures only the rightful voter 
+        can cast their ballot, with zero duplicacy at every level.
+      </p>
+    </div>
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="section-title">Technology Stack</div>
+  <h2 class="section-heading" style="font-size:1.5rem;margin-bottom:0.5rem;">Built With Modern Tools</h2>
+  <div class="tech-stack">
+    <div class="tech-card">
+      <div class="tech-icon">🐍</div>
+      <div class="tech-name">Python Flask</div>
+      <div class="tech-desc">Backend web framework</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">👁️</div>
+      <div class="tech-name">OpenCV</div>
+      <div class="tech-desc">Face detection & capture</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🤖</div>
+      <div class="tech-name">scikit-learn KNN</div>
+      <div class="tech-desc">Face recognition ML model</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🗄️</div>
+      <div class="tech-name">MySQL</div>
+      <div class="tech-desc">Voter & vote database</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🎨</div>
+      <div class="tech-name">Glassmorphism UI</div>
+      <div class="tech-desc">Modern dark theme design</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">📊</div>
+      <div class="tech-name">Chart.js</div>
+      <div class="tech-desc">Live result charts</div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div style="margin-top:3rem;">
+    <div class="section-title">FAQ</div>
+    <h2 class="section-heading" style="font-size:1.5rem;margin-bottom:0.5rem;">Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Is my face data stored securely? <span class="faq-icon"><i class="fa fa-plus"></i></span></div>
+        <div class="faq-a">Yes. Face data is stored as numerical vectors (not raw images) in encrypted pickle files, bound to your Aadhaar number. No one can reverse-engineer your face from the stored data.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Can I vote more than once? <span class="faq-icon"><i class="fa fa-plus"></i></span></div>
+        <div class="faq-a">No. The system enforces a strict one-vote-per-Aadhaar policy at the database level. Even if someone tries to bypass the UI, the database constraint prevents duplicate votes.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">What if face verification fails? <span class="faq-icon"><i class="fa fa-plus"></i></span></div>
+        <div class="faq-a">The system retries up to 5 times automatically. Ensure good lighting, remove glasses if needed, and face the camera directly. If issues persist, contact our helpline.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">What documents do I need to register? <span class="faq-icon"><i class="fa fa-plus"></i></span></div>
+        <div class="faq-a">You need your 12-digit Aadhaar number, EPIC/Voter ID number, and a registered mobile number. Email is optional but recommended for OTP backup.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Is my vote anonymous? <span class="faq-icon"><i class="fa fa-plus"></i></span></div>
+        <div class="faq-a">Yes. While we record that you voted (to prevent duplicates), the specific party you voted for is stored separately and cannot be linked back to you in public reports.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="padding:2rem;text-align:center;border-top:1px solid var(--glass-border);color:var(--text-muted);font-size:0.85rem;margin-top:3rem;">
+  © 2026 NEXTGEN VOTE India — AI Powered Face Recognition Voting System
+</footer>
+</body>
+</html>

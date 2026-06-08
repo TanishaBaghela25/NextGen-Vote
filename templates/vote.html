@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cast Your Vote — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+.vote-wrap {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 90px 1rem 2rem;
+}
+
+.vote-card {
+  width: 100%; max-width: 580px;
+  padding: 2.5rem;
+  border-radius: var(--radius-xl);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+}
+
+.vote-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.voter-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px;
+  background: rgba(0,255,136,0.1);
+  border: 1px solid rgba(0,255,136,0.25);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  margin-bottom: 1rem;
+}
+
+.vote-warning {
+  background: rgba(255,107,53,0.08);
+  border: 1px solid rgba(255,107,53,0.2);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: var(--accent-orange);
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.party-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.party-btn {
+  padding: 1.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-align: center;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.party-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: var(--transition);
+  background: var(--party-hover, rgba(255,255,255,0.05));
+}
+
+.party-btn:hover::before { opacity: 1; }
+.party-btn:hover { transform: translateY(-2px); }
+
+.party-btn.selected {
+  border-color: var(--party-color);
+  box-shadow: 0 0 20px rgba(var(--party-rgb), 0.2);
+}
+
+.party-symbol { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.party-name {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.party-full {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* Specific party colors */
+.bjp   { background: rgba(255,107,0,0.08); border-color: rgba(255,107,0,0.2); --party-color: #ff6b00; }
+.cong  { background: rgba(0,100,220,0.08); border-color: rgba(0,100,220,0.2); --party-color: #0064dc; }
+.aap   { background: rgba(0,180,255,0.08); border-color: rgba(0,180,255,0.2); --party-color: #00b4ff; }
+.nota  { background: rgba(150,150,150,0.08); border-color: rgba(150,150,150,0.15); --party-color: #999; }
+
+.bjp .party-name   { color: #ff8c42; }
+.cong .party-name  { color: #4a9eff; }
+.aap .party-name   { color: #00c8ff; }
+.nota .party-name  { color: #aaa; }
+
+.confirm-section {
+  margin-top: 1.5rem;
+  display: none;
+}
+
+.confirm-section.visible { display: block; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+</nav>
+
+<div class="vote-wrap">
+  <div class="vote-card">
+    <div class="vote-header">
+      <div class="voter-badge">
+        <i class="fa fa-check-circle"></i> Identity Verified
+      </div>
+      <h2 style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:0.4rem;">CAST YOUR VOTE</h2>
+      <p style="color:var(--text-secondary);font-size:0.9rem;">Welcome, <strong style="color:var(--text-primary);">{{ voter_name }}</strong></p>
+    </div>
+
+    <div class="vote-warning">
+      <i class="fa fa-exclamation-triangle"></i>
+      You can vote only ONCE. This action cannot be undone.
+    </div>
+
+    <form action="/submit_vote" method="POST" id="vote-form">
+      <p style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">
+        Select a candidate or party
+      </p>
+      <div class="party-grid">
+        <button type="button" class="party-btn bjp" onclick="selectParty('BJP', this)">
+          <div class="party-symbol">🏵️</div>
+          <div class="party-name">BJP</div>
+          <div class="party-full">Bharatiya Janata Party</div>
+        </button>
+        <button type="button" class="party-btn cong" onclick="selectParty('CONGRESS', this)">
+          <div class="party-symbol">✋</div>
+          <div class="party-name">CONGRESS</div>
+          <div class="party-full">Indian National Congress</div>
+        </button>
+        <button type="button" class="party-btn aap" onclick="selectParty('AAP', this)">
+          <div class="party-symbol">🧹</div>
+          <div class="party-name">AAP</div>
+          <div class="party-full">Aam Aadmi Party</div>
+        </button>
+        <button type="button" class="party-btn nota" onclick="selectParty('NOTA', this)">
+          <div class="party-symbol">🚫</div>
+          <div class="party-name">NOTA</div>
+          <div class="party-full">None of the Above</div>
+        </button>
+      </div>
+
+      <input type="hidden" name="party" id="selected-party">
+
+      <div class="confirm-section" id="confirm-section">
+        <div class="glow-line"></div>
+        <p style="text-align:center;color:var(--text-secondary);font-size:0.9rem;margin-bottom:1rem;">
+          You selected: <strong id="confirm-party-name" style="color:var(--text-primary);"></strong>
+        </p>
+        <button type="submit" class="btn btn-success btn-full btn-lg">
+          <i class="fa fa-check"></i> Confirm & Submit Vote
+        </button>
+        <button type="button" class="btn btn-secondary btn-full" style="margin-top:0.5rem;" onclick="clearSelection()">
+          <i class="fa fa-times"></i> Change Selection
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+let selected = null;
+
+function selectParty(party, el) {
+  document.querySelectorAll('.party-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selected = party;
+  document.getElementById('selected-party').value = party;
+  document.getElementById('confirm-party-name').textContent = party;
+  document.getElementById('confirm-section').classList.add('visible');
+}
+
+function clearSelection() {
+  document.querySelectorAll('.party-btn').forEach(b => b.classList.remove('selected'));
+  selected = null;
+  document.getElementById('selected-party').value = '';
+  document.getElementById('confirm-section').classList.remove('visible');
+}
+
+document.getElementById('vote-form').addEventListener('submit', e => {
+  if(!selected) { e.preventDefault(); alert('Please select a party first'); }
+});
+</script>
+</body>
+</html>

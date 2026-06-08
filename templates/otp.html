@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OTP Verification — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+.otp-wrap {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 80px 1rem 2rem;
+}
+
+.otp-card {
+  width: 100%; max-width: 420px;
+  padding: 2.5rem;
+  border-radius: var(--radius-xl);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  text-align: center;
+}
+
+.otp-icon {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,212,255,0.1));
+  border: 1px solid rgba(0,255,136,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1.5rem;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.demo-otp-box {
+  background: rgba(0,212,255,0.06);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.demo-otp-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+}
+
+.demo-otp-value {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  letter-spacing: 8px;
+  text-shadow: 0 0 20px rgba(0,255,204,0.4);
+}
+
+.otp-inputs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.otp-digit {
+  width: 52px; height: 58px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.otp-digit:focus {
+  border-color: var(--accent-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
+}
+
+.timer {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.timer span { color: var(--accent-orange); font-weight: 700; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+</nav>
+
+<div class="otp-wrap">
+  <div class="otp-card">
+    <div class="otp-icon">📱</div>
+    <h2 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:0.5rem;">OTP VERIFICATION</h2>
+    <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:1.5rem;">
+      OTP sent to mobile ending in ••••{{ mobile }}
+    </p>
+
+    <!-- Demo: Show OTP -->
+    <div class="demo-otp-box">
+      <div class="demo-otp-label">Demo OTP (visible for testing)</div>
+      <div class="demo-otp-value">{{ otp }}</div>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error"><i class="fa fa-exclamation-circle"></i> {{ error }}</div>
+    {% endif %}
+
+    <form action="/verify_otp" method="POST" onsubmit="collectOTP(event)">
+      <input type="hidden" name="otp" id="otp-hidden">
+      <div class="otp-inputs">
+        <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" id="d1">
+        <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" id="d2">
+        <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" id="d3">
+        <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" id="d4">
+        <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" id="d5">
+        <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" id="d6">
+      </div>
+      <div class="timer">Expires in <span id="countdown">05:00</span></div>
+      <button type="submit" class="btn btn-primary btn-full btn-lg">
+        <i class="fa fa-check-circle"></i> Verify OTP
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+// Auto-focus next digit
+const digits = document.querySelectorAll('.otp-digit');
+digits.forEach((d, i) => {
+  d.addEventListener('input', () => {
+    d.value = d.value.replace(/[^0-9]/g, '');
+    if(d.value && i < 5) digits[i+1].focus();
+  });
+  d.addEventListener('keydown', e => {
+    if(e.key === 'Backspace' && !d.value && i > 0) digits[i-1].focus();
+  });
+});
+
+function collectOTP(e) {
+  const otp = Array.from(digits).map(d => d.value).join('');
+  document.getElementById('otp-hidden').value = otp;
+}
+
+// Countdown
+let secs = 300;
+const timer = setInterval(() => {
+  secs--;
+  const m = String(Math.floor(secs/60)).padStart(2,'0');
+  const s = String(secs%60).padStart(2,'0');
+  document.getElementById('countdown').textContent = m+':'+s;
+  if(secs <= 0) { clearInterval(timer); document.getElementById('countdown').textContent = 'Expired'; }
+}, 1000);
+</script>
+</body>
+</html>

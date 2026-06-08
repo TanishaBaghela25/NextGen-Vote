@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Live Results — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.results-page {
+  padding: 90px 2rem 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.live-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px;
+  background: rgba(255,51,102,0.1);
+  border: 1px solid rgba(255,51,102,0.3);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-red);
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.live-dot {
+  width: 8px; height: 8px;
+  background: var(--accent-red);
+  border-radius: 50%;
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+.results-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.total-card {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, rgba(0,212,255,0.12), rgba(124,58,237,0.08));
+  border: 1px solid rgba(0,212,255,0.25);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.total-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.total-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.party-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 3rem;
+}
+
+.party-result-card {
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  text-align: center;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.party-result-card.leading {
+  border-color: rgba(0,255,136,0.3);
+  box-shadow: 0 0 30px rgba(0,255,136,0.08);
+}
+
+.leading-tag {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: rgba(0,255,136,0.15);
+  color: var(--accent-green);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.party-result-card:hover {
+  transform: translateY(-4px);
+}
+
+.p-symbol { font-size: 3rem; margin-bottom: 0.8rem; }
+
+.p-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.p-fullname {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.p-votes {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.p-percent {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.p-bar {
+  height: 4px;
+  border-radius: 10px;
+  margin-top: 1rem;
+  background: rgba(255,255,255,0.06);
+}
+
+.p-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1.5s ease;
+}
+
+.chart-section {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+}
+
+.chart-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 8px;
+}
+
+@media(max-width:768px) {
+  .chart-section { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/admin_dashboard">← Dashboard</a></li>
+  </ul>
+</nav>
+
+<div class="results-page">
+  <div class="results-header">
+    <div class="live-badge">
+      <span class="live-dot"></span> LIVE COUNTING
+    </div>
+    <h1 style="font-family:var(--font-display);font-size:2.5rem;font-weight:900;margin-bottom:1rem;">
+      ELECTION RESULTS
+    </h1>
+    <div class="total-card">
+      <div class="total-num">{{ total }}</div>
+      <div class="total-label">Total Votes Cast</div>
+    </div>
+  </div>
+
+  <!-- Party Cards -->
+  <div class="party-cards-grid">
+    {% set party_info = {
+      'BJP':      {'symbol': '🏵️', 'color': '#ff6b00', 'full': 'Bharatiya Janata Party'},
+      'CONGRESS': {'symbol': '✋', 'color': '#0064dc', 'full': 'Indian National Congress'},
+      'AAP':      {'symbol': '🧹', 'color': '#00b4ff', 'full': 'Aam Aadmi Party'},
+      'NOTA':     {'symbol': '🚫', 'color': '#888',    'full': 'None of the Above'}
+    } %}
+    {% for r in results %}
+      {% set info = party_info.get(r.party, {'symbol': '🗳️', 'color': '#00d4ff', 'full': r.party}) %}
+      {% set pct = ((r.count / total * 100) | round(1)) if total > 0 else 0 %}
+      <div class="party-result-card {% if loop.index0 == 0 and total > 0 %}leading{% endif %}">
+        {% if loop.index0 == 0 and total > 0 %}<div class="leading-tag">🥇 LEADING</div>{% endif %}
+        <div class="p-symbol">{{ info.symbol }}</div>
+        <div class="p-name" style="color:{{ info.color }};">{{ r.party }}</div>
+        <div class="p-fullname">{{ info.full }}</div>
+        <div class="p-votes" style="color:{{ info.color }};">{{ r.count }}</div>
+        <div class="p-percent">{{ pct }}% of votes</div>
+        <div class="p-bar">
+          <div class="p-bar-fill" style="width:{{ pct }}%;background:{{ info.color }};"></div>
+        </div>
+      </div>
+    {% endfor %}
+    {% if not results %}
+    <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted);">
+      <div style="font-size:3rem;margin-bottom:1rem;">🗳️</div>
+      No votes have been cast yet.
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-section">
+    <div class="chart-card">
+      <div class="chart-title"><i class="fa fa-chart-bar" style="color:var(--accent-blue);"></i> Vote Count by Party</div>
+      <canvas id="barChart" height="100"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title"><i class="fa fa-chart-pie" style="color:var(--accent-cyan);"></i> Vote Share</div>
+      <canvas id="pieChart" height="100"></canvas>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:1rem;">
+    <a href="/admin_dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+  </div>
+</div>
+
+<script>
+const labels = {{ labels | safe }};
+const counts = {{ counts | safe }};
+const colors = ['rgba(255,107,0,0.8)','rgba(0,100,220,0.8)','rgba(0,180,255,0.8)','rgba(150,150,150,0.6)'];
+const borders= ['#ff6b00','#0064dc','#00b4ff','#999'];
+
+// Bar chart
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [{
+      label: 'Votes',
+      data: counts,
+      backgroundColor: colors,
+      borderColor: borders,
+      borderWidth: 2,
+      borderRadius: 10
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, ticks: { color:'#8b9cc8' }, grid: { color:'rgba(255,255,255,0.05)' } },
+      x: { ticks: { color:'#8b9cc8' }, grid: { display: false } }
+    }
+  }
+});
+
+// Pie chart
+new Chart(document.getElementById('pieChart'), {
+  type: 'doughnut',
+  data: {
+    labels,
+    datasets: [{
+      data: counts,
+      backgroundColor: colors,
+      borderColor: borders,
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color:'#8b9cc8', padding: 16, font: { size: 12 } }
+      }
+    },
+    cutout: '60%'
+  }
+});
+
+// Auto-refresh every 30 seconds
+setTimeout(() => location.reload(), 30000);
+</script>
+</body>
+</html>

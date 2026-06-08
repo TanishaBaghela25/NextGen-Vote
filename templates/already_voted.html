@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Already Voted — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+.av-wrap {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center; padding: 2rem;
+}
+.av-card {
+  text-align: center; max-width: 480px;
+  padding: 3.5rem;
+  border-radius: var(--radius-xl);
+  background: var(--bg-card);
+  border: 1px solid rgba(255,107,53,0.25);
+  box-shadow: 0 0 40px rgba(255,107,53,0.06);
+}
+.av-icon {
+  font-size: 5rem; margin-bottom: 1.5rem;
+  animation: float 3s ease-in-out infinite;
+  display: block;
+}
+</style>
+</head>
+<body>
+<div class="av-wrap">
+  <div class="av-card">
+    <span class="av-icon">🚫</span>
+    <h1 style="font-family:var(--font-display);font-size:1.5rem;color:var(--accent-orange);margin-bottom:1rem;">
+      VOTE ALREADY CAST
+    </h1>
+    <p style="color:var(--text-secondary);line-height:1.7;margin-bottom:2rem;">
+      This Aadhaar number has already been used to cast a vote in this election.
+      Each voter can vote only once. Your democratic right has been exercised.
+    </p>
+    <div class="alert alert-info" style="text-align:left;margin-bottom:1.5rem;">
+      <i class="fa fa-info-circle"></i>
+      If you believe this is an error, please contact the election helpline at <strong>1800-111-VOTE</strong>.
+    </div>
+    <a href="/" class="btn btn-secondary">← Return to Home</a>
+  </div>
+</div>
+</body>
+</html>

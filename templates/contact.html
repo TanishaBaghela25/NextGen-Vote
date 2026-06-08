@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Contact — NEXTGEN VOTE</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+.contact-page { padding: 100px 2rem 4rem; max-width: 900px; margin: 0 auto; }
+.contact-big-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem; margin: 2rem 0;
+}
+.contact-big-card {
+  padding: 2rem;
+  background: var(--bg-card); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg); transition: var(--transition);
+}
+.contact-big-card:hover { transform: translateY(-3px); border-color: rgba(0,212,255,0.2); }
+.contact-card-icon {
+  width: 56px; height: 56px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 1.2rem;
+}
+.contact-card-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+.contact-card-val { font-size: 1.1rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.3rem; }
+.contact-card-sub { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+
+.contact-form-card {
+  padding: 2rem; background: var(--bg-card); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl); margin-top: 2rem;
+}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/register">Register</a></li>
+    <li><a href="/user_login">Login</a></li>
+  </ul>
+</nav>
+
+<div class="contact-page">
+  <div style="text-align:center;margin-bottom:3rem;">
+    <div class="section-title" style="text-align:center;">Contact & Support</div>
+    <h1 class="section-heading" style="text-align:center;font-size:2rem;">We're Here to Help</h1>
+    <p style="color:var(--text-secondary);max-width:500px;margin:1rem auto 0;font-size:0.95rem;">
+      Having trouble registering or voting? Reach us through any of the channels below.
+    </p>
+  </div>
+
+  <div class="contact-big-grid">
+    <div class="contact-big-card">
+      <div class="contact-card-icon" style="background:rgba(0,212,255,0.1);color:var(--accent-blue);">
+        <i class="fa fa-phone"></i>
+      </div>
+      <div class="contact-card-title">Voter Helpline</div>
+      <div class="contact-card-val">1800-111-VOTE</div>
+      <div class="contact-card-sub">Toll-Free • Available Mon–Sat, 9AM–6PM IST<br>For registration & login issues</div>
+    </div>
+
+    <div class="contact-big-card">
+      <div class="contact-card-icon" style="background:rgba(0,255,136,0.1);color:var(--accent-green);">
+        <i class="fa fa-envelope"></i>
+      </div>
+      <div class="contact-card-title">Email Support</div>
+      <div class="contact-card-val" style="font-size:0.95rem;">support@NEXTGEN VOTE.in</div>
+      <div class="contact-card-sub">Response within 24 business hours<br>Send screenshots of errors if possible</div>
+    </div>
+
+    <div class="contact-big-card">
+      <div class="contact-card-icon" style="background:rgba(37,211,102,0.1);color:#25d366;">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+      <div class="contact-card-title">WhatsApp Support</div>
+      <div class="contact-card-val">+91 8827633282</div>
+      <div class="contact-card-sub">Quick response for urgent issues<br>Send Aadhaar last 4 digits for verification</div>
+    </div>
+
+    <div class="contact-big-card">
+      <div class="contact-card-icon" style="background:rgba(124,58,237,0.1);color:#a78bfa;">
+        <i class="fa fa-building-columns"></i>
+      </div>
+      <div class="contact-card-title">Election Commission</div>
+      <div class="contact-card-val" style="font-size:0.9rem;">eci@eci.gov.in</div>
+      <div class="contact-card-sub">Official grievance portal<br>For serious complaints & escalations</div>
+    </div>
+
+    <div class="contact-big-card">
+      <div class="contact-card-icon" style="background:rgba(255,107,53,0.1);color:var(--accent-orange);">
+        <i class="fa fa-location-dot"></i>
+      </div>
+      <div class="contact-card-title">Office Address</div>
+      <div class="contact-card-val" style="font-size:0.85rem;color:var(--text-primary);">Nirvachan Sadan</div>
+      <div class="contact-card-sub">Ashoka Road, New Delhi — 110001<br>Open Monday to Friday, 10AM–5PM</div>
+    </div>
+
+    <div class="contact-big-card">
+      <div class="contact-card-icon" style="background:rgba(0,212,255,0.08);color:var(--accent-blue);">
+        <i class="fa fa-clock"></i>
+      </div>
+      <div class="contact-card-title">Support Hours</div>
+      <div class="contact-card-val" style="font-size:0.85rem;color:var(--text-primary);">Mon – Sat</div>
+      <div class="contact-card-sub">
+        Phone: 9:00 AM – 6:00 PM IST<br>
+        Email: 24 hours<br>
+        WhatsApp: 8:00 AM – 10:00 PM IST
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Contact Form (UI only — no email backend needed for demo) -->
+  <div class="contact-form-card">
+    <h3 style="font-family:var(--font-display);font-size:0.9rem;color:var(--text-secondary);letter-spacing:2px;margin-bottom:1.5rem;text-transform:uppercase;">
+      <i class="fa fa-paper-plane" style="color:var(--accent-blue);"></i> Send us a Message
+    </h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" class="form-input" placeholder="Full name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email / Mobile</label>
+        <input type="text" class="form-input" placeholder="Contact info">
+      </div>
+      <div class="form-group" style="grid-column:1/-1;">
+        <label class="form-label">Issue Type</label>
+        <select class="form-input">
+          <option>Registration Problem</option>
+          <option>OTP Not Received</option>
+          <option>Face Verification Failed</option>
+          <option>Vote Not Submitted</option>
+          <option>Duplicate Vote Error</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1;">
+        <label class="form-label">Message</label>
+        <textarea class="form-input" rows="4" placeholder="Describe your issue in detail..."></textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="alert('Message sent! Support team will contact you within 24 hours.')">
+      <i class="fa fa-paper-plane"></i> Send Message
+    </button>
+  </div>
+</div>
+
+<footer style="padding:2rem;text-align:center;border-top:1px solid var(--glass-border);color:var(--text-muted);font-size:0.85rem;margin-top:3rem;">
+  © 2026 NEXTGEN VOTE India — Helpline: 1800-111-VOTE
+</footer>
+</body>
+</html>

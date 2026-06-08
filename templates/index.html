@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXTGEN VOTE — AI Powered Voting System</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 100px 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,212,255,0.12), transparent);
+  top: -100px; left: -100px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(124,58,237,0.1), transparent);
+  bottom: -50px; right: -50px;
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+.orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,255,136,0.06), transparent);
+  top: 40%; left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 18px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.5s ease;
+}
+
+.badge-dot {
+  width: 8px; height: 8px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.6s ease 0.1s both;
+}
+
+.hero-title .gradient-text {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+  animation: fadeInUp 0.6s ease 0.2s both;
+}
+
+.hero-buttons {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  animation: fadeInUp 0.6s ease 0.3s both;
+}
+
+.hero-stats {
+  display: flex; gap: 3rem; justify-content: center;
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--glass-border);
+  animation: fadeInUp 0.6s ease 0.4s both;
+}
+
+.hero-stat-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+}
+
+.hero-stat-lbl {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ── FEATURES SECTION ── */
+.section {
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-center { text-align: center; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.feature-card {
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  transition: var(--transition);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--card-color, var(--accent-blue));
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,212,255,0.2);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1.2rem;
+  background: var(--icon-bg, rgba(0,212,255,0.12));
+  color: var(--icon-color, var(--accent-blue));
+}
+
+.feature-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.5px;
+}
+
+.feature-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ── PROCESS SECTION ── */
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 3rem;
+  position: relative;
+}
+
+.process-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  position: relative;
+}
+
+.process-num {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.process-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.process-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ── AI SHOWCASE ── */
+.ai-showcase {
+  padding: 5rem 2rem;
+  background: linear-gradient(180deg, transparent, rgba(0,212,255,0.02), transparent);
+}
+
+.showcase-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.showcase-visual {
+  position: relative;
+  height: 400px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.face-scan-demo {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,255,0.15), rgba(0,212,255,0.03));
+  border: 2px solid rgba(0,212,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.face-scan-icon {
+  font-size: 5rem;
+  color: rgba(0,212,255,0.6);
+}
+
+.scan-ring {
+  position: absolute;
+  border: 2px solid rgba(0,212,255,0.2);
+  border-radius: 50%;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.scan-ring:nth-child(1) { width: 120%; height: 120%; animation-delay: 0.3s; }
+.scan-ring:nth-child(2) { width: 140%; height: 140%; animation-delay: 0.6s; }
+.scan-ring:nth-child(3) { width: 160%; height: 160%; animation-delay: 0.9s; }
+
+.scan-line-demo {
+  position: absolute;
+  left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  animation: scanline 2.5s linear infinite;
+  opacity: 0.7;
+}
+
+.showcase-points {
+  list-style: none;
+  margin-top: 2rem;
+}
+
+.showcase-points li {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.showcase-points li .check {
+  width: 22px; height: 22px; min-width: 22px;
+  border-radius: 50%;
+  background: rgba(0,255,136,0.15);
+  color: var(--accent-green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  margin-top: 2px;
+}
+
+/* ── SECURITY SECTION ── */
+.security-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-top: 3rem;
+}
+
+.security-card {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(8,20,45,0.9), rgba(4,10,26,0.9));
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: flex-start; gap: 14px;
+}
+
+.security-icon {
+  width: 44px; height: 44px; min-width: 44px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+}
+
+.security-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.security-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ── CONTACT / CTA SECTION ── */
+.contact-section {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.contact-card {
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+
+.contact-icon-wrap {
+  width: 56px; height: 56px; min-width: 56px;
+  border-radius: var(--radius-md);
+  background: rgba(0,212,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  color: var(--accent-blue);
+}
+
+.contact-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.contact-card-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+}
+
+.contact-card-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  padding: 2rem;
+  text-align: center;
+  border-top: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-family: var(--font-ui);
+}
+
+/* ── FULL-WIDTH SECTION BG ── */
+.section-alt {
+  background: rgba(0,212,255,0.015);
+  border-top: 1px solid rgba(0,212,255,0.05);
+  border-bottom: 1px solid rgba(0,212,255,0.05);
+}
+
+@media (max-width: 768px) {
+  .showcase-inner { grid-template-columns: 1fr; }
+  .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+  <div class="face-logo">
+    <span class="ring ring-1"></span>
+    <span class="ring ring-2"></span>
+    <span class="ring ring-3"></span>
+    <span class="logo-scan"></span>
+    <span class="face-icon"><i class="fa fa-user"></i></span>
+  </div>
+</div>
+    <span class="nav-logo-text">NEXTGEN VOTE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/user_login">Login</a></li>
+    <li><a href="/register" class="nav-cta">Register</a></li>
+  </ul>
+  <form action="/set_language" method="POST" style="display:flex;align-items:center;gap:8px;">
+    <select name="lang" class="lang-select" onchange="this.form.submit()">
+      <option value="en" {% if lang=='en' %}selected{% endif %}>🌐 English</option>
+      <option value="hi" {% if lang=='hi' %}selected{% endif %}>🇮🇳 हिंदी</option>
+      <option value="ta" {% if lang=='ta' %}selected{% endif %}>தமிழ்</option>
+      <option value="te" {% if lang=='te' %}selected{% endif %}>తెలుగు</option>
+      <option value="bn" {% if lang=='bn' %}selected{% endif %}>বাংলা</option>
+      <option value="mr" {% if lang=='mr' %}selected{% endif %}>मराठी</option>
+    </select>
+  </form>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="hero-orb orb-3"></div>
+  <div>
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      🌅 A NEW DAWN FOR INDIA STARTS WITH YOUR VOTE
+    </div>
+    <h1 class="hero-title">
+      The Future of<br>
+      <span class="gradient-text">Democratic Voting</span><br>
+      Is Here
+    </h1>
+    <p class="hero-subtitle">
+      Secure, transparent, and tamper-proof elections powered by AI face recognition,
+      multi-layer authentication, and real-time result analytics.
+    </p>
+    <div class="hero-buttons">
+      <a href="/register" class="btn btn-primary btn-lg">
+        <i class="fa fa-user-plus"></i> Register to Vote
+      </a>
+      <a href="/user_login" class="btn btn-secondary btn-lg">
+        <i class="fa fa-sign-in-alt"></i> Voter Login
+      </a>
+      <a href="/admin_login" class="btn btn-secondary btn-sm" style="padding:14px 20px;">
+        <i class="fa fa-shield-alt"></i> Admin
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">100%</div>
+        <div class="hero-stat-lbl">Secure</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">AI</div>
+        <div class="hero-stat-lbl">Face Auth</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">0</div>
+        <div class="hero-stat-lbl">Duplicates</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">Live</div>
+        <div class="hero-stat-lbl">Results</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="section">
+  <div class="section-center">
+    <div class="section-title">Why NEXTGEN VOTE</div>
+    <h2 class="section-heading">Everything You Need for<br>Secure Elections</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card" style="--card-color: #00d4ff; --icon-bg: rgba(0,212,255,0.12); --icon-color: #00d4ff;">
+      <div class="feature-icon"><i class="fa fa-face-smile"></i></div>
+      <div class="feature-title">AI Face Recognition</div>
+      <div class="feature-desc">KNN-based face matching with 50×50 vector comparison. No duplicate face registration allowed across the entire database.</div>
+    </div>
+    <div class="feature-card" style="--card-color: #00ff88; --icon-bg: rgba(0,255,136,0.12); --icon-color: #00ff88;">
+      <div class="feature-icon"><i class="fa fa-id-card"></i></div>
+      <div class="feature-title">Aadhaar + EPIC Verification</div>
+      <div class="feature-desc">Dual identity verification with Aadhaar (12-digit) and EPIC Voter ID ensures only genuine citizens vote once.</div>
+    </div>
+    <div class="feature-card" style="--card-color: #7c3aed; --icon-bg: rgba(124,58,237,0.12); --icon-color: #a78bfa;">
+      <div class="feature-icon"><i class="fa fa-mobile-alt"></i></div>
+      <div class="feature-title">OTP Authentication</div>
+      <div class="feature-desc">One-time password sent to your registered mobile number adds an extra security layer before face verification.</div>
+    </div>
+    <div class="feature-card" style="--card-color: #ff6b35; --icon-bg: rgba(255,107,53,0.12); --icon-color: #ff6b35;">
+      <div class="feature-icon"><i class="fa fa-chart-bar"></i></div>
+      <div class="feature-title">Live Results Dashboard</div>
+      <div class="feature-desc">Real-time vote counting with animated bar charts and party-wise breakdown visible to admin instantly.</div>
+    </div>
+    <div class="feature-card" style="--card-color: #00ffcc; --icon-bg: rgba(0,255,204,0.12); --icon-color: #00ffcc;">
+      <div class="feature-icon"><i class="fa fa-ban"></i></div>
+      <div class="feature-title">Zero Duplicate Votes</div>
+      <div class="feature-desc">Multi-level duplicate prevention: Aadhaar uniqueness, EPIC uniqueness, face uniqueness, and vote-once enforcement.</div>
+    </div>
+    <div class="feature-card" style="--card-color: #ff3366; --icon-bg: rgba(255,51,102,0.12); --icon-color: #ff3366;">
+      <div class="feature-icon"><i class="fa fa-globe"></i></div>
+      <div class="feature-title">Multi-Language Support</div>
+      <div class="feature-desc">Full support for English, Hindi, Tamil, Telugu, Bengali, and Marathi for accessible voting across India.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<div class="section-alt">
+<section class="section">
+  <div class="section-center">
+    <div class="section-title">Voting Process</div>
+    <h2 class="section-heading">How NEXTGEN VOTE Works</h2>
+  </div>
+  <div class="process-grid">
+    <div class="process-card">
+      <div class="process-num">01</div>
+      <div class="process-title">Register</div>
+      <div class="process-desc">Enter Aadhaar, EPIC ID, mobile, email. System checks for duplicates instantly.</div>
+    </div>
+    <div class="process-card">
+      <div class="process-num">02</div>
+      <div class="process-title">Face Capture</div>
+      <div class="process-desc">Live webcam captures 100 face frames. AI detects, resizes, and stores as encrypted vectors.</div>
+    </div>
+    <div class="process-card">
+      <div class="process-num">03</div>
+      <div class="process-title">OTP Verify</div>
+      <div class="process-desc">On election day, enter Aadhaar + EPIC. OTP sent to registered mobile for verification.</div>
+    </div>
+    <div class="process-card">
+      <div class="process-num">04</div>
+      <div class="process-title">Face Match</div>
+      <div class="process-desc">AI compares live face with stored vectors using KNN. Only exact match proceeds.</div>
+    </div>
+    <div class="process-card">
+      <div class="process-num">05</div>
+      <div class="process-title">Cast Vote</div>
+      <div class="process-desc">Select your party or NOTA. Vote is recorded with timestamp. Cannot vote again.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ═══ AI SHOWCASE ═══ -->
+<div class="ai-showcase">
+  <div class="showcase-inner">
+    <div>
+      <div class="section-title">Face Recognition</div>
+      <h2 class="section-heading">Powered by<br>Computer Vision AI</h2>
+      <p style="color:var(--text-secondary);margin:1rem 0;line-height:1.7;font-size:0.95rem;">
+        Our system uses OpenCV Haar Cascade detection with K-Nearest Neighbor classification 
+        to match voter faces with sub-4500 distance threshold — ensuring only the registered 
+        voter can cast their ballot.
+      </p>
+      <ul class="showcase-points">
+        <li><span class="check"><i class="fa fa-check"></i></span>Detects face in real-time from webcam</li>
+        <li><span class="check"><i class="fa fa-check"></i></span>50×50 pixel face vector comparison</li>
+        <li><span class="check"><i class="fa fa-check"></i></span>100 training frames per voter for accuracy</li>
+        <li><span class="check"><i class="fa fa-check"></i></span>Rejects multiple faces in frame</li>
+        <li><span class="check"><i class="fa fa-check"></i></span>Cross-checks against full voter database</li>
+        <li><span class="check"><i class="fa fa-check"></i></span>No spoof detection bypass possible</li>
+      </ul>
+    </div>
+    <div class="showcase-visual">
+      <div class="face-scan-demo">
+        <span class="scan-ring"></span>
+        <span class="scan-ring"></span>
+        <span class="scan-ring"></span>
+        <i class="fa fa-user-circle face-scan-icon"></i>
+      </div>
+      <div class="scan-line-demo"></div>
+      <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--accent-green);padding:8px 20px;border-radius:20px;font-size:0.8rem;white-space:nowrap;">
+        ✓ FACE MATCHED — IDENTITY VERIFIED
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECURITY ═══ -->
+<section class="section">
+  <div class="section-center">
+    <div class="section-title">Security Features</div>
+    <h2 class="section-heading">Enterprise-Grade Protection</h2>
+  </div>
+  <div class="security-grid">
+    <div class="security-card">
+      <div class="security-icon" style="background:rgba(0,212,255,0.1);color:var(--accent-blue);">
+        <i class="fa fa-fingerprint"></i>
+      </div>
+      <div>
+        <div class="security-label">Biometric Auth</div>
+        <div class="security-text">Face vectors stored as encrypted pickle files with Aadhaar binding</div>
+      </div>
+    </div>
+    <div class="security-card">
+      <div class="security-icon" style="background:rgba(0,255,136,0.1);color:var(--accent-green);">
+        <i class="fa fa-lock"></i>
+      </div>
+      <div>
+        <div class="security-label">SHA-256 Hashing</div>
+        <div class="security-text">All admin passwords stored as SHA-256 hashes, never plain text</div>
+      </div>
+    </div>
+    <div class="security-card">
+      <div class="security-icon" style="background:rgba(124,58,237,0.1);color:#a78bfa;">
+        <i class="fa fa-database"></i>
+      </div>
+      <div>
+        <div class="security-label">Separated DBs</div>
+        <div class="security-text">Voter registration and vote records stored in separate MySQL tables</div>
+      </div>
+    </div>
+    <div class="security-card">
+      <div class="security-icon" style="background:rgba(255,107,53,0.1);color:var(--accent-orange);">
+        <i class="fa fa-shield-halved"></i>
+      </div>
+      <div>
+        <div class="security-label">Session Security</div>
+        <div class="security-text">Flask sessions with secret key. Verification state cleared after vote</div>
+      </div>
+    </div>
+    <div class="security-card">
+      <div class="security-icon" style="background:rgba(0,255,204,0.1);color:#00ffcc;">
+        <i class="fa fa-ban"></i>
+      </div>
+      <div>
+        <div class="security-label">Duplicate Prevention</div>
+        <div class="security-text">Aadhaar, EPIC, mobile, and face uniqueness enforced at every step</div>
+      </div>
+    </div>
+    <div class="security-card">
+      <div class="security-icon" style="background:rgba(255,51,102,0.1);color:var(--accent-red);">
+        <i class="fa fa-eye"></i>
+      </div>
+      <div>
+        <div class="security-label">Admin Audit</div>
+        <div class="security-text">Full voter and vote logs visible to admin with timestamps and state info</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT / CUSTOMER CARE ═══ -->
+<div class="section-alt">
+<section class="contact-section">
+  <div class="section-center">
+    <div class="section-title">Support & Contact</div>
+    <h2 class="section-heading">We're Here to Help</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-icon-wrap"><i class="fa fa-phone"></i></div>
+      <div>
+        <div class="contact-card-title">Voter Helpline</div>
+        <div class="contact-card-value">1800-111-VOTE</div>
+        <div class="contact-card-sub">Toll-Free • Mon–Sat, 9AM–6PM</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon-wrap" style="background:rgba(0,255,136,0.1);color:var(--accent-green);">
+        <i class="fa fa-envelope"></i>
+      </div>
+      <div>
+        <div class="contact-card-title">Email Support</div>
+        <div class="contact-card-value">support@NEXTGEN VOTE.in</div>
+        <div class="contact-card-sub">Response within 24 hours</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon-wrap" style="background:rgba(124,58,237,0.1);color:#a78bfa;">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+      <div>
+        <div class="contact-card-title">WhatsApp Support</div>
+        <div class="contact-card-value">+91 8827633282</div>
+        <div class="contact-card-sub">Quick help for registration issues</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon-wrap" style="background:rgba(255,107,53,0.1);color:var(--accent-orange);">
+        <i class="fa fa-building"></i>
+      </div>
+      <div>
+        <div class="contact-card-title">Election Commission</div>
+        <div class="contact-card-value">eci@eci.gov.in</div>
+        <div class="contact-card-sub">Official grievance portal</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <p style="margin-bottom:8px;color:var(--text-secondary);">
+    <strong style="color:var(--accent-blue);">NEXTGEN VOTE</strong> — AI Powered Face Recognition Voting System
+  </p>
+  <p>© 2026 NEXTGEN VOTE India. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
