@@ -1,49 +1,10 @@
-# 🗳️ SmartVote — AI Powered Face Recognition Voting System
+# SmartVote — AI Powered Face Recognition Voting System
 
 A modern, secure online voting system with AI face recognition, Aadhaar+EPIC verification, OTP authentication, MySQL database, and a glassmorphism dark UI.
 
 ---
 
-## 📁 Project Structure
-
-```
-SmartVotingSystem/
-│
-├── app.py                    ← Main Flask application
-├── add_faces.py              ← Offline face registration script
-├── database.sql              ← MySQL setup script
-├── requirements.txt          ← Python dependencies
-│
-├── data/
-│   ├── names.pkl             ← Face label data (auto-created)
-│   └── faces_data.pkl        ← Face vector data (auto-created)
-│
-├── static/
-│   └── css/
-│       └── style.css         ← Global glassmorphism CSS
-│
-└── templates/
-    ├── index.html            ← Home page
-    ├── register.html         ← Voter registration
-    ├── user_login.html       ← Login page
-    ├── otp.html              ← OTP verification
-    ├── face_verify.html      ← Face scan page
-    ├── vote.html             ← Cast vote page
-    ├── success.html          ← Vote submitted
-    ├── already_voted.html    ← Duplicate vote block
-    ├── about.html            ← About page
-    ├── contact.html          ← Contact / Support
-    ├── admin_login.html      ← Admin login
-    ├── admin_dashboard.html  ← Admin main dashboard
-    ├── admin_voters.html     ← All registered voters
-    ├── results.html          ← Live election results
-    ├── admin_change_password.html
-    └── admin_add.html
-```
-
----
-
-## ⚙️ Setup Instructions
+## Setup Instructions
 
 ### Step 1 — Install Python 3.10+
 ```bash
@@ -75,37 +36,8 @@ SOURCE database.sql;
 ```
 Or copy-paste the content of `database.sql` into MySQL.
 
-### Step 5 — Configure Database Password
 
-Open `app.py` and update line ~12:
-```python
-def get_db():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="YOUR_MYSQL_PASSWORD",  # ← Change this
-        database="smart_voting_db"
-    )
-```
-
-### Step 6 — Run the Application
-```bash
-python app.py
-```
-
-Open browser: **http://127.0.0.1:5000**
-
----
-
-## 🔐 Default Admin Login
-- **Username:** `admin`
-- **Password:** `Admin@123`
-
-> ⚠️ Change this immediately after first login via Admin → Change Password
-
----
-
-## 🗳️ Voting Flow
+## Voting Flow
 
 1. **Register** → Enter Aadhaar (12-digit) + EPIC ID + Mobile + Face Capture
 2. **Login** → Enter Aadhaar + EPIC ID → OTP sent to mobile
@@ -116,7 +48,7 @@ Open browser: **http://127.0.0.1:5000**
 
 ---
 
-## 🛡️ Security Features
+## Security Features
 
 | Feature | Description |
 |---|---|
@@ -130,7 +62,7 @@ Open browser: **http://127.0.0.1:5000**
 
 ---
 
-## 📊 Databases
+## Databases
 
 | Table | Contents |
 |---|---|
@@ -139,32 +71,7 @@ Open browser: **http://127.0.0.1:5000**
 | `admins` | Username + SHA-256 hashed password |
 
 ---
-
-## 🌐 Routes Reference
-
-| URL | Purpose |
-|---|---|
-| `/` | Home page |
-| `/register` | Voter registration |
-| `/user_login` | Voter login |
-| `/verify_otp` | OTP check |
-| `/face_verify_page` | Face scan UI |
-| `/face_verify` | Face verify API (POST) |
-| `/vote` | Voting page |
-| `/submit_vote` | Submit vote (POST) |
-| `/about` | About page |
-| `/contact` | Contact page |
-| `/admin_login` | Admin login |
-| `/admin_dashboard` | Admin dashboard |
-| `/admin_voters` | All voters list |
-| `/admin_results` | Live results |
-| `/admin_change_password` | Update admin creds |
-| `/admin_add` | Add new admin |
-| `/admin_logout` | Logout admin |
-
----
-
-## 🔧 Troubleshooting
+## Troubleshooting
 
 **Camera not working?**
 - Allow browser camera permissions
@@ -186,7 +93,3 @@ Open browser: **http://127.0.0.1:5000**
 
 ---
 
-## 📞 Support
-- Helpline: 1800-111-VOTE
-- Email: support@smartvote.in
-- WhatsApp: +91 98765 43210
