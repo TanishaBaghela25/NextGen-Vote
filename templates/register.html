@@ -98,6 +98,7 @@
   height: 300px;
   object-fit: cover;
   display: block;
+  transform: scaleX(-1);  /* Mirror fix */
 }
 
 .video-overlay-scan {
@@ -403,7 +404,10 @@ function startCapture() {
     const canvas = document.createElement('canvas');
     canvas.width  = video.videoWidth  || 400;
     canvas.height = video.videoHeight || 300;
-    canvas.getContext('2d').drawImage(video, 0, 0);
+    const ctx = canvas.getContext('2d');
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0);
     const image = canvas.toDataURL('image/jpeg', 0.7);
 
     if(frames === SEND_AT) bestImage = image;
