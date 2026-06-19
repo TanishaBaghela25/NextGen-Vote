@@ -281,7 +281,9 @@ def face_verify():
 
         if len(faces) == 0:
             return jsonify({"status": "failed", "message": "No face detected"})
-
+        if len(faces) > 1:
+            return jsonify({"status": "failed", "message": "multiple faces detected . only one person allowed in frame"})
+        
         LABELS, FACES = load_face_model()
         if LABELS is None:
             return jsonify({"status": "failed", "message": "No face data found"})
