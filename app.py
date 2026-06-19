@@ -21,10 +21,11 @@ os.makedirs('data', exist_ok=True)
 # ─────────────────────────────────────────
 def get_db():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="new_password",   # ← change this
-        database="online_voting"
+        host     = os.environ.get('DB_HOST'),
+        user     = os.environ.get('DB_USER'),
+        password = os.environ.get('DB_PASSWORD'),
+        database = os.environ.get('DB_NAME'),
+        port     = int(os.environ.get('DB_PORT', 3306))
     )
 
 # ─────────────────────────────────────────
